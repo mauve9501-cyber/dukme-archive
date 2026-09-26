@@ -1,0 +1,17 @@
+name: keep-supabase-awake
+# 무료 Supabase는 7일간 요청이 없으면 일시정지됩니다. 매일 한 번 가볍게 핑을 보내 막습니다.
+# 공개 키(publishable)만 쓰고 데이터는 읽지 않습니다(dm_ping RPC).
+on:
+  schedule:
+    - cron: "0 0 * * *"   # 매일 UTC 00:00 (한국 오전 9시)
+  workflow_dispatch: {}
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase
+        run: |
+          curl -sS -X POST -w "\nstatus: %{http_code}\n" \
+            "https://uvvvslwqwaysgawdhvls.supabase.co/rest/v1/rpc/dm_ping" \
+            -H "apikey: sb_publishable_Fj5iUlb3pK8z9oYcM0NVsA_XLX9Ses8" \
+            -H "Content-Type: application/json" -d '{}'
